@@ -2,6 +2,7 @@
 var mario = new Vue({
     el: 'main',
     template: `
+    <div>
         <h1>Mario 4</h1>
 
         <p>When you say</p>
@@ -12,16 +13,14 @@ var mario = new Vue({
         <form id="draw-form">
             <label>
                 How high?
-                <!--
-                    TODO 3 add a v-model directive to the input,
-                    so that Vue will store it for us as 'heightStr'.
-                -->
-                <input type="text" id="height" :class="error ? 'invalid-field': null" />
+                <input
+                    type="text"
+                    id="height"
+                    :class="error ? 'invalid-field': null"
+                    v-model="heightStr"
+                />
                 <label class="error-message">
-                    <!--
-                    TODO 2
-                    Render the error message from data right here
-                    -->
+                    {{ error }}
                 </label>
             </label>
             <br><br>
@@ -35,58 +34,31 @@ var mario = new Vue({
         <br><br>
 
         <div id="pyramid">
-            <!--
-            TODO 6: Add some Vue.js code right here.
-            You'll want to use v-for="row in rows"
-            and make a <p> for each one.
-            -->
-        </div>`,
+            <p v-for="row in rows" v-html="row" />
+        </div>
+    </div>`,
     data: function() {
         return {
             heightStr: '5',
             height: 5,
-            error: null, // Delete this line when you finish TODO 4
         };
     },
     computed: {
         rows: function() {
-            if (this.error) return null;
-            // TODO 5
-            // Fill out this computed property by calling
-            // pyramidRows on this.height.
+            return pyramidRows(this.height);
         },
-        // TODO 4 (and two other places: search for "TODO 4")
-        // Make a new computed property 'error'.
-        // It should be the result of calling checkForErrors on this.height.
-        // (Delete the error key from data once this is done)
-
+        error: function() {
+            return checkForErrors(this.heightStr);
+        },
     },
     methods: {
         clearAndRedraw(evt) {
             // Stop the form from causing a page refresh.
             evt.preventDefault();
 
+            if (this.error) return;
+
             this.height = parseInt(this.heightStr);
-
-            // TODO 4
-            // Delete the next line. It now happens for us automatically via computed properties
-            this.error = checkForErrors(this.heightStr);
-
-            if (this.error) {
-                // Stop drawing, we've got errors.
-                return;
-            }
-
-            var pyramid = document.querySelector('#pyramid');
-            pyramid.innerHTML = '';
-
-            // Again, isn't Vue supposed to help with this...
-            var rows = pyramidRows(this.height); // TODO 5: Use this.rows instead (the computed property you just made)
-            for (var ix = 0; ix < rows.length; ix++) {
-                var row = document.createElement('p');
-                row.innerHTML = rows[ix];
-                pyramid.appendChild(row);
-            }
         },
     },
 });
@@ -105,8 +77,15 @@ var mario = new Vue({
  * If there is no error, return null
  */
 function checkForErrors(heightStr) {
-    // TODO 1
-    // Fill out this function.
+    if (heightStr === "") return "No height provided";
+
+    var height = parseInt(heightStr);
+
+    if (isNaN(height) || height < 1) return "Invalid choice of height";
+
+    if (height > 100) return "You must be craaazy if you think I'm gonna draw a pyramid that big!";
+
+    return null;
 }
 
 
