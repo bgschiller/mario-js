@@ -1,80 +1,122 @@
 
+var mario = new Vue({
+    el: 'main',
+    template: `
+        <h1>Mario 4</h1>
 
-// set a handler function for the form's submission event
-$("#draw-form").submit(function(event) {
+        <p>When you say</p>
+        <p><strong>Draw a pyramid</strong></p>
+        <p>I say:</p>
+        <br>
 
-    // prevent the form from submitting (otherwise page will refresh)
-    event.preventDefault();
+        <form id="draw-form">
+            <label>
+                How high?
+                <!--
+                    TODO 3 add a v-model directive to the input,
+                    so that Vue will store it for us as 'heightStr'.
+                -->
+                <input type="text" id="height" :class="error ? 'invalid-field': null" />
+                <label class="error-message">
+                    <!--
+                    TODO 2
+                    Render the error message from data right here
+                    -->
+                </label>
+            </label>
+            <br><br>
+            <input
+                type="submit"
+                value="Draw a pyramid"
+                @click="clearAndRedraw"
+            />
+        </form>
 
-    // clear any previous error message that might be displayed from last time
-    clearError();
+        <br><br>
 
-    // TODO 3
-    // figure out the height the user typed (replace the "5" below)
-    heightStr = "5";
+        <div id="pyramid">
+            <!--
+            TODO 6: Add some Vue.js code right here.
+            You'll want to use v-for="row in rows"
+            and make a <p> for each one.
+            -->
+        </div>`,
+    data: function() {
+        return {
+            heightStr: '5',
+            height: 5,
+            error: null, // Delete this line when you finish TODO 4
+        };
+    },
+    computed: {
+        rows: function() {
+            // TODO 5
+            // Fill out this computed property by calling
+            // pyramidRows on this.height.
+        },
+        // TODO 4 (and two other places: search for "TODO 4")
+        // Make a new computed property 'error'.
+        // It should be the result of calling checkForErrors on this.heightStr.
+        // (Delete the error key from data once this is done)
 
-    // if they didn't type anything, yell at them and exit early
-    if (heightStr == "") {
-        displayError("Please provide a height");
-        return;
-    }
+    },
+    methods: {
+        clearAndRedraw(evt) {
+            // Stop the form from causing a page refresh.
+            evt.preventDefault();
 
-    // convert the string to an int
-    height = parseInt(heightStr);
+            // TODO 4
+            // Delete the next line. It now happens for us automatically via computed properties
+            this.error = checkForErrors(this.heightStr);
 
-    // if the height is not-a-number or not positive, yell at them and exit early
-    if (isNaN(height) || height < 1) {
-        displayError(heightStr + ": That's not a valid height.");
-        return;
-    }
+            if (this.error) {
+                // Stop drawing, we've got errors.
+                return;
+            }
 
-    // if the height is absurdly tall, yell at them and exit early
-    var tooTall = 100;
-    if (height > tooTall) {
-        displayError("Are you cray? I can't build a pyramid that tall.");
-        return;
-    }
+            this.height = parseInt(this.heightStr);
 
-    // draw pyramid with the specified height
-    drawPyramid(height);
+            var pyramid = document.querySelector('#pyramid');
+            pyramid.innerHTML = '';
+
+            // Again, isn't Vue supposed to help with this...
+            var rows = pyramidRows(this.height); // TODO 5: Use this.rows instead (the computed property you just made)
+            for (var ix = 0; ix < rows.length; ix++) {
+                var row = document.createElement('p');
+                row.innerHTML = rows[ix];
+                pyramid.appendChild(row);
+            }
+        },
+    },
 });
 
 
 /**
- * displayError
+ * checkForErrors
  *
- * Displays an error message on the text input, and colors it red
- */
-function displayError(message) {
-    // TODO 4
-    // implement this function using jQuery
-
-}
-
-
-/*
- * clearError
+ * Check the row input for the following cases, and return an
+ * appropriate error (as a string):
  *
- * Undisplays the error message and removes the red CSS style
+ * 1. No height provided (empty string)
+ * 2. Height is not a number, or is less than 1
+ * 3. Height is more than 100.
+ *
+ * If there is no error, return null
  */
-function clearError(message) {
-    $("#height").removeClass("invalid-field");
-    $(".error-message").text("");
+function checkForErrors(heightStr) {
+    // TODO 1
+    // Fill out this function.
 }
-
 
 
 /**
  * drawPyramid
  *
- * Renders, in the HTML document, a Mario pyramid of the specified height
+ * Renders, as a list of html strings, a Mario pyramid of the specified height
  */
-function drawPyramid(height) {
+function pyramidRows(height) {
 
-    // TODO 2
-    // clear the old content from the #pyramid container
-
-
+    var rowStrings = [];
     // for each row....
     for (var row = 0; row < height; row++) {
 
@@ -92,11 +134,7 @@ function drawPyramid(height) {
             rowStr += "#";
         }
 
-        // make a <p> element for this row
-        rowElem = $("<p>").html(rowStr);
-
-        // TODO 1
-        // insert the paragraph into the #pyramid container
-
+        rowStrings.push(rowStr);
     }
+    return rowStrings;
 }
