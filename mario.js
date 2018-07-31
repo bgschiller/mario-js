@@ -2,6 +2,7 @@
 var mario = new Vue({
     el: 'main',
     template: `
+    <div>
         <h1>Mario 4</h1>
 
         <p>When you say</p>
@@ -40,7 +41,8 @@ var mario = new Vue({
             You'll want to use v-for="row in rows"
             and make a <p> for each one.
             -->
-        </div>`,
+        </div>
+    </div>`,
     data: function() {
         return {
             heightStr: '5',
