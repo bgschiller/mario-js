@@ -1,48 +1,6 @@
 
 var mario = new Vue({
     el: 'main',
-    template: `
-    <div>
-        <h1>Mario 4</h1>
-
-        <p>When you say</p>
-        <p><strong>Draw a pyramid</strong></p>
-        <p>I say:</p>
-        <br>
-
-        <form id="draw-form">
-            <label>
-                How high?
-                <!--
-                    TODO 3 add a v-model directive to the input,
-                    so that Vue will store it for us as 'heightStr'.
-                -->
-                <input type="text" id="height" :class="error ? 'invalid-field': null" />
-                <label class="error-message">
-                    <!--
-                    TODO 2
-                    Render the error message from data right here
-                    -->
-                </label>
-            </label>
-            <br><br>
-            <input
-                type="submit"
-                value="Draw a pyramid"
-                @click="clearAndRedraw"
-            />
-        </form>
-
-        <br><br>
-
-        <div id="pyramid">
-            <!--
-            TODO 6: Add some Vue.js code right here.
-            You'll want to use v-for="row in rows"
-            and make a <p> for each one.
-            -->
-        </div>
-    </div>`,
     data: function() {
         return {
             heightStr: '5',
