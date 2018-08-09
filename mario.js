@@ -1,42 +1,6 @@
 
 var mario = new Vue({
     el: 'main',
-    template: `
-    <div>
-        <h1>Mario 4</h1>
-
-        <p>When you say</p>
-        <p><strong>Draw a pyramid</strong></p>
-        <p>I say:</p>
-        <br>
-
-        <form id="draw-form">
-            <label>
-                How high?
-                <input
-                    type="text"
-                    id="height"
-                    :class="error ? 'invalid-field': null"
-                    v-model="heightStr"
-                />
-                <label class="error-message">
-                    {{ error }}
-                </label>
-            </label>
-            <br><br>
-            <input
-                type="submit"
-                value="Draw a pyramid"
-                @click="clearAndRedraw"
-            />
-        </form>
-
-        <br><br>
-
-        <div id="pyramid">
-            <p v-for="row in rows" v-html="row" />
-        </div>
-    </div>`,
     data: function() {
         return {
             heightStr: '5',
