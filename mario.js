@@ -4,49 +4,28 @@ var mario = new Vue({
     data: function() {
         return {
             heightStr: '5',
-            height: 5,
-            error: null, // Delete this line when you finish TODO 4
+            // height: 5,
+            //error: null
         };
     },
     computed: {
+        height: function () {
+            return parseInt(this.heightStr);
+        },
         rows: function() {
+            return pyramidRows(this.height);
             // TODO 5
             // Fill out this computed property by calling
             // pyramidRows on this.height.
+        },
+        error: function() {
+            return checkForErrors(this.heightStr);
         },
         // TODO 4 (and two other places: search for "TODO 4")
         // Make a new computed property 'error'.
         // It should be the result of calling checkForErrors on this.heightStr.
         // (Delete the error key from data once this is done)
 
-    },
-    methods: {
-        clearAndRedraw(evt) {
-            // Stop the form from causing a page refresh.
-            evt.preventDefault();
-
-            // TODO 4
-            // Delete the next line. It now happens for us automatically via computed properties
-            this.error = checkForErrors(this.heightStr);
-
-            if (this.error) {
-                // Stop drawing, we've got errors.
-                return;
-            }
-
-            this.height = parseInt(this.heightStr);
-
-            var pyramid = document.querySelector('#pyramid');
-            pyramid.innerHTML = '';
-
-            // Again, isn't Vue supposed to help with this...
-            var rows = pyramidRows(this.height); // TODO 5: Use this.rows instead (the computed property you just made)
-            for (var ix = 0; ix < rows.length; ix++) {
-                var row = document.createElement('p');
-                row.innerHTML = rows[ix];
-                pyramid.appendChild(row);
-            }
-        },
     },
 });
 
@@ -64,8 +43,19 @@ var mario = new Vue({
  * If there is no error, return null
  */
 function checkForErrors(heightStr) {
-    // TODO 1
-    // Fill out this function.
+    var heightNum = parseInt(heightStr);
+
+    if (heightStr == '') {
+        return 'Please enter a value';
+    }
+    if (isNaN(heightNum)) {
+        return 'Please enter a number';
+    }
+    if (heightNum < 1 || heightNum > 100) {
+        return 'Please enter a number between 1 and 100';
+    }
+    // no errors, so return null
+    return null;
 }
 
 
